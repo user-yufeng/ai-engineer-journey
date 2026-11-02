@@ -28,24 +28,25 @@
 
 <p><b>第三，这段代码是在你本机执行的。</b>不是云端，不是沙箱。所以第一课先关掉所有默认工具，只跑最干净的版本。</p>
 
-<h2>Step 1 · 建工程</h2>
+<h2>Step 1 · 认识你的工程（已就绪，看懂就行）</h2>
 
 <div class="step">
-<h3>在你的学习目录里建一个 Python 工程</h3>
+<h3>工程目录已经建好了，这三条是给你理解用的</h3>
 <span class="cmd">cd /d D:\AI\workbuddy工作路径\2026-11-01-23-44-31\lab</span>
-<p class="cmd-note">进到你放代码的目录。已经在里面的话这条不用跑。</p>
+<p class="cmd-note">进到项目目录。你已经在里面的话不用跑。</p>
 
 <span class="cmd">uv init</span>
-<p class="cmd-note">让 uv 生成工程骨架：一个 pyproject.toml（记录这个项目依赖哪些包）和一个空的源码目录。</p>
+<p class="cmd-note">作用是让 uv 生成工程骨架。你现在跑它会提示 already initialized——这不是错误，是在说「工程早就有了」，说明一切正常。</p>
 
 <span class="cmd">uv add "smolagents[openai]"</span>
-<p class="cmd-note">下载安装 smolagents，外加连接模型必需的 openai 包。方括号里的 openai 叫「可选依赖」，不装它的话后面连模型会直接报 ModuleNotFoundError——这是新手最常卡的一步。</p>
+<p class="cmd-note">装包用的。包我已经装好了，你再跑一次它会快速检查一遍然后告诉你没什么可装的——同样不是错误。</p>
 
 <span class="cmd">uv run python check_env.py</span>
-<p class="cmd-note">跑我已经给你写好的环境自检脚本。它不联网，只验证三件事：包能导入、agent 能创建、自定义工具能注册成功。三行全部打印出来才算过关。</p>
+<p class="cmd-note">这条是今天真正要跑的：环境自检。它不联网，只验证三件事——包能导入、agent 能创建、自定义工具能注册成功。三行全部打印出来才算过关。</p>
 
 <div class="callout">
-<strong>装包太慢怎么办：</strong>如果你等了三分钟还没装完，是 PyPI 官方源太慢。我已经给你的 uv 配好了阿里云镜像，正常应该在 30 秒内装完。
+<strong>uv 三板斧，以后天天用：</strong><code>uv add 包名</code> 装包并锁版本；<code>uv run python 文件.py</code> 用项目的环境跑代码；<code>uv sync</code> 按锁定文件一键还原环境。装包慢是因为官方源远，我已配好阿里云镜像。
+</div>
 </div>
 </div>
 
