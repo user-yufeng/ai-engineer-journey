@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 1 · 跑通你的第一个 agent</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<h1>跑通你的第一个 agent</h1>
+<p class="meta">Lesson 1 · 第 1 周 · 约 90 分钟 · 绑定 <a href="0000-start-here.html">Mission</a>：从零基础到能独立造 AI Agent 的工程师</p>
+
+<div class="win">
+<h3>这课结束时，你会拿到</h3>
+<ul>
+<li>一个能在你本机真实跑起来的 agent，它自己写代码算出答案，而不是瞎猜</li>
+<li>一个<b>你自己写的工具</b>，被这个 agent 调用成功</li>
+<li>一个不会把 API key 泄露到 GitHub 的项目骨架（这件事现在就要做对，晚了就麻烦）</li>
+</ul>
+</div>
+
+<h2>先搞清三件事，两分钟</h2>
+
+<p><b>第一，agent 不是模型。</b>模型是引擎，agent 是「用这个引擎驱动的一套循环」。模型只负责往下写一个 token，agent 负责：把任务喂给模型 → 拿到输出 → 执行 → 把结果再喂回去 → 直到任务完成。</p>
+
+<p><b>第二，smolagents 的 CodeAgent 让模型写 Python 代码来调用工具</b>，而不是输出 JSON 去调用。这是它跟大多数框架最大的不同，也是为什么选它入门——你本来就看得懂 Python，agent 的每一步你都能读懂。</p>
+
+<p><b>第三，这段代码是在你本机执行的。</b>不是云端，不是沙箱。所以第一课先关掉所有默认工具，只跑最干净的版本。</p>
+
+<h2>Step 1 · 建工程</h2>
+
+<div class="step">
+<h3>在你的学习目录里建一个 Python 工程</h3>
+<span class="cmd">cd /d D:\AI\workbuddy工作路径\2026-11-01-23-44-31\lab</span>
+<p class="cmd-note">进到你放代码的目录。已经在里面的话这条不用跑。</p>
+
+<span class="cmd">uv init</span>
+<p class="cmd-note">让 uv 生成工程骨架：一个 pyproject.toml（记录这个项目依赖哪些包）和一个空的源码目录。</p>
+
+<span class="cmd">uv add "smolagents[openai]"</span>
+<p class="cmd-note">下载安装 smolagents，外加连接模型必需的 openai 包。方括号里的 openai 叫「可选依赖」，不装它的话后面连模型会直接报 ModuleNotFoundError——这是新手最常卡的一步。</p>
+
+<span class="cmd">uv run python check_env.py</span>
+<p class="cmd-note">跑我已经给你写好的环境自检脚本。它不联网，只验证三件事：包能导入、agent 能创建、自定义工具能注册成功。三行全部打印出来才算过关。</p>
+
+<div class="callout">
+<strong>装包太慢怎么办：</strong>如果你等了三分钟还没装完，是 PyPI 官方源太慢。我已经给你的 uv 配好了阿里云镜像，正常应该在 30 秒内装完。
+</div>
+</div>
+
+<div class="callout">
+<strong>为什么用 uv 而不是 pip：</strong>uv 一条命令搞定「建虚拟环境 + 装包 + 锁版本」，不会把你系统里的 Python 搞乱。你以后每个小项目都该这么做。
+</div>
+
+<h2>Step 2 · 拿一个免费的模型 key</h2>
+
+<p>你的机器连不上 HuggingFace，所以官方教程里的免 token 方案用不了。改用国产的 OpenAI 兼容接口，免费额度足够你学完整个课程。</p>
+
+<div class="callout">
+<strong>你的 key 已经配好了：</strong>硅基流动的 key 我写进了 <code>lab/.env</code>（变量名 <code>SILICONFLOW_API_KEY</code>），今天不用再注册任何东西。智谱是备选：哪天硅基限流了，再去 <a href="https://open.bigmodel.cn/">open.bigmodel.cn</a> 注册一个换上。
+</div>
+
+<p>重装环境时才需要自己配：在 lab 目录新建 <code>.env</code>，内容一行：</p>
+
+<pre><code>SILICONFLOW_API_KEY=这里粘贴你的key</code></pre>
+
+<p>然后在同一个目录新建 <code>.gitignore</code>，写：</p>
+
+<pre><code>.env
+.venv/
+__pycache__/</code></pre>
+
+<div class="callout warn">
+<strong>这一步千万别跳。</strong>你的项目迟早要推到 GitHub，key 一旦提交上去，几分钟内就会被人扫走刷爆额度。<code>.gitignore</code> 的作用是让 git 永远忽略这些文件。写完用 <code>git status</code> 确认列表里看不到 <code>.env</code> 才算过关。
+</div>
+
+<h2>Step 3 · 跑通第一个 agent</h2>
+
+<p><code>hello_agent.py</code> 我已经帮你建好了，长这样——你的任务是<b>对照着读懂每一行</b>，而不是照抄：</p>
+
+<pre><code>import os
+from dotenv import load_dotenv
+from smolagents import CodeAgent, OpenAIServerModel
+
+load_dotenv()
+
+model = OpenAIServerModel(
+    model_id="Qwen/Qwen2.5-7B-Instruct",
+    api_base="https://api.siliconflow.cn/v1",
+    api_key=os.environ["SILICONFLOW_API_KEY"],
+)
+
+agent = CodeAgent(tools=[], model=model, add_base_tools=False)
+
+agent.run("第 118 个斐波那契数是多少？")</code></pre>
+
+<p>跑它（我已经替你跑通过一次：agent 自己写了循环算出 <code>2046711111473984623691759</code>，三次调用共 6 秒）：</p>
+
+<span class="cmd">uv run python hello_agent.py</span>
+<p class="cmd-note">uv run 会自动用项目里的虚拟环境执行，不用你先 activate。</p>
+
+<p>你会看到 agent 一步步输出：它写了什么代码、执行结果是什么、最后给出的答案。<b>注意看它写的代码</b>——这就是 CodeAgent 的核心：让模型用代码解决问题，而不是靠记忆猜一个数。</p>
+
+<div class="callout">
+<strong>报错排查：</strong>如果报 <code>KeyError: 'SILICONFLOW_API_KEY'</code>，说明 .env 没读到，检查文件是不是叫 <code>.env</code>（前面那个点，Windows 记事本容易存成 <code>.env.txt</code>）。如果报连接错误，先看 <code>NOTES.md</code> 的网络限制说明。
+</div>
+
+<h2>Step 4 · 给它一个你自己的工具</h2>
+
+<p>没有工具的 agent 只是个会写代码的聊天机器人。加个工具试试——用一个你熟悉的场景，健身房数据：</p>
+
+<pre><code>from smolagents import CodeAgent, OpenAIServerModel, tool
+
+
+@tool
+def gym_count(city: str) -> str:
+    """查询某个城市有多少家健身房。
+    Args:
+        city: 城市名，例如 深圳
+    """
+    data = {"深圳": 741, "广州": 506, "上海": 623}
+    return f"{city}有 {data.get(city, '没有数据')} 家健身房"
+
+
+agent = CodeAgent(tools=[gym_count], model=model, add_base_tools=False)
+
+agent.run("深圳和广州的健身房加起来有多少家？")</code></pre>
+
+<p>三个关键点：</p>
+
+<ul class="tight">
+<li><code>@tool</code> 这个装饰器把它变成 agent 能调用的工具</li>
+<li>函数第一行 <code>"""..."""</code> 不是注释，是<b>给模型看的说明书</b>——模型靠它决定什么时候调用、传什么参数。写不清楚，工具就永远不会被调用</li>
+<li>参数后面的 <code>-&gt; str</code> 和 <code>city: str</code> 是类型标注，smolagents 靠它生成工具的参数表</li>
+</ul>
+
+<h2>自检</h2>
+
+<p>先凭记忆选，别翻上面。选错不扣分，选对才算真的记住了。</p>
+
+<div class="quiz" data-ok="对。CodeAgent 让模型写 Python 代码调用工具，这是它跟其他框架最大的区别，也是你能读懂每一步的原因。" data-no="再想一下：两者的区别不在价格、不在联网，而在「模型用什么形式去调用工具」。">
+  <div class="q">1. CodeAgent 和常见的 ToolCallingAgent，核心区别是什么？</div>
+  <div class="opts">
+    <button data-correct="1">CodeAgent 直接写 Python 代码，ToolCallingAgent 输出 JSON 调用</button>
+    <button data-correct="0">CodeAgent 只能在本机运行，ToolCallingAgent 必须联网才能跑</button>
+    <button data-correct="0">CodeAgent 的费用要贵一倍，ToolCallingAgent 完全免费随便用</button>
+    <button data-correct="0">CodeAgent 不需要任何模型，ToolCallingAgent 才需要配一个模型</button>
+  </div>
+  <div class="fb"></div>
+</div>
+
+<div class="quiz" data-ok="对。代码在你本机的 Python 解释器里跑，这也是为什么第一课要先关掉所有默认工具。" data-no="提示：想想为什么我们特意强调「关掉默认工具」和「注意泄露风险」。">
+  <div class="q">2. agent.run() 之后，模型写出来的那段 Python 代码在哪里执行？</div>
+  <div class="opts">
+    <button data-correct="0">在 HuggingFace 的远程服务器上面执行</button>
+    <button data-correct="1">在你本机的 Python 解释器里面执行</button>
+    <button data-correct="0">在模型内部的数学计算单元里完成</button>
+    <button data-correct="0">根本没有执行，只是把代码打印出来</button>
+  </div>
+  <div class="fb"></div>
+</div>
+
+<div class="quiz" data-ok="对。默认工具箱里的网络搜索在你的网络环境下会卡住甚至超时，先关掉最干净。" data-no="再想：默认工具箱里最主要的那类工具需要什么能力？">
+  <div class="q">3. 第一课为什么要把 add_base_tools 设成 False？</div>
+  <div class="opts">
+    <button data-correct="0">默认工具按月收费，免费账号调用不了</button>
+    <button data-correct="0">默认工具需要 GPU 才能加载起来</button>
+    <button data-correct="1">默认工具要联网搜索，本机网络不通</button>
+    <button data-correct="0">默认工具会覆盖掉你自己写的工具</button>
+  </div>
+  <div class="fb"></div>
+</div>
+
+<h2>今天的作业</h2>
+
+<ol>
+<li><b>把示例工具换成你自己场景的。</b>比如查你们公司预算系统里的某个数据、查某个接口的返回值。写清楚 docstring，看 agent 会不会主动调用它。</li>
+<li><b>看一遍 agent 的记忆。</b>在 <code>agent.run(...)</code> 后面加一行 <code>print(agent.memory.steps[-1])</code>，把最后一步完整打出来，读一遍它到底存了什么。</li>
+<li><b>确认 key 没泄露。</b>跑 <code>git status</code>，确认输出里没有 <code>.env</code>。有的话说明 .gitignore 没写对。</li>
+</ol>
+
+<hr>
+
+<footer>
+<p><strong>Primary source：</strong><code>reference-repos/smolagents/docs/source/zh/guided_tour.md</code>（用 VSCode 打开，预览面板只认 HTML）。这课的第 3、4 步对应它的「构建您的 agent」一节，遇到不一样的写法以官方为准。</p>
+<p><strong>下一课：</strong>工具系统深挖——什么时候该写成函数、什么时候该写成 Tool 类，以及怎么接 MCP 工具。</p>
+<p><strong>卡住了就直接问你的 agent 老师。</strong>报错信息整段贴过去，比你描述半天快得多。</p>
+<p><a href="0000-start-here.html">Mission</a> · <a href="0000-start-here.html">Resources</a></p>
+</footer>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

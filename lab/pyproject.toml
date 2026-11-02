@@ -1,0 +1,20 @@
+[project]
+name = "lab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "yaxingdong022-commits", email = "yaxingdong022@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "mcp<2",
+    "smolagents[mcp,openai]>=1.26.0",
+]
+
+[project.scripts]
+lab = "lab:main"
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"

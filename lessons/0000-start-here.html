@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>总览 · 从零到 AI 工程师</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<h1>从零到 AI 工程师 · 学习总览</h1>
+<p class="meta">主线：吃透 smolagents · 每天 ≥ 2 小时 · 0 预算</p>
+
+<div class="win">
+<h3>你的 Mission（为什么学）</h3>
+<p style="margin:0">你简历上所有 AI 经历都是「用 AI 工具干活」。这份学习要让你能<b>独立从 0 造出一个带评测、能上线、能写出数字的 AI 系统</b>，放到 GitHub 上当作品集，用它换一份 AI 工程师的工作。</p>
+</div>
+
+<h2>课程表</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:15px">
+<tr>
+  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">状态</th>
+  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">课程</th>
+  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">你拿到什么</th>
+</tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">可开始</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0001-run-your-first-agent.html">第 1 课 · 跑通第一个 agent</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">本机能跑的 agent + 自定义工具</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">可开始</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0002-tools-and-mcp.html">第 2 课 · 工具系统与 MCP</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">Tool 类写法 + 真实接上 MCP 服务器</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 3 课 · 逐行读 agent 循环</td><td style="padding:8px; border-bottom:1px solid var(--line)">看懂 agents.py 每一步</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 4 课 · 从零手写 agent</td><td style="padding:8px; border-bottom:1px solid var(--line)">不依赖框架的 agent 循环</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 5 课 · 评测（最关键）</td><td style="padding:8px; border-bottom:1px solid var(--line)">评测集 + 准确率数字</td></tr>
+</table>
+
+<h2>开始前，把两个 key 备好</h2>
+
+<ol class="tight">
+<li><b>模型 key</b>：<a href="https://open.bigmodel.cn/">智谱开放平台</a> 注册后在「API Keys」复制，或 <a href="https://cloud.siliconflow.cn/">硅基流动</a>。存进 <code>lab/.env</code>（第一课有写法）。</li>
+<li><b>GitHub token</b>：<a href="https://github.com/settings/tokens">生成页</a>（勾 repo 权限）。拿到后发给你的 agent 老师，仓库直接推好。</li>
+</ol>
+
+<h2>资料都在本地（不用翻墙）</h2>
+
+<ul class="tight">
+<li><code>reference-repos/smolagents/docs/source/zh/</code> — 官方中文文档，从 <code>guided_tour.md</code> 读起</li>
+<li><code>reference-repos/smolagents/src/smolagents/agents.py</code> — 核心源码，第 3 课的教材</li>
+<li><code>NOTES.md</code> — 本机网络限制和已踩过的坑，装不上包先看它</li>
+</ul>
+
+<div class="callout">
+<strong>卡住就问。</strong>报错整段贴给你的 agent 老师，比你自己描述快得多。
+</div>
+
+<footer>
+<p><a href="0001-run-your-first-agent.html">直接进第 1 课</a></p>
+</footer>
+
+</body>
+</html>
