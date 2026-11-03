@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 3 · 看见循环</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #16181d;
+  --fg: #e6e8eb;
+  --muted: #9aa4b0;
+  --line: #2c313a;
+  --surface: #1d2027;
+  --accent: #5dcaa5;
+  --accent-soft: #14312a;
+  --warn: #ef9f27;
+  --warn-soft: #33280f;
+  --code-bg: #111318;
+  --radius: 10px;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+  max-width: 760px;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 19px;
+  font-weight: 600;
+  margin: 44px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 28px 0 8px;
+}
+
+p, li { margin: 0 0 12px; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover { border-bottom-color: var(--accent); }
+
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+pre code { background: none; padding: 0; font-size: 13.5px; }
+
+.meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.callout {
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.callout.warn { border-left-color: var(--warn); }
+.callout strong { font-weight: 600; }
+
+.win {
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0 32px;
+}
+
+.win h3 { margin: 0 0 8px; font-size: 15px; }
+.win ul { margin: 0; padding-left: 20px; }
+.win li { margin: 0 0 4px; }
+
+.step {
+  border-left: 2px solid var(--line);
+  padding-left: 20px;
+  margin: 28px 0;
+}
+
+.step > h3 { margin-top: 0; }
+
+.cmd {
+  font-family: Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0 4px;
+  display: block;
+  overflow-x: auto;
+}
+
+.cmd-note {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}
+
+.quiz { margin: 16px 0 26px; }
+
+.quiz .q {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.quiz .opts { display: grid; gap: 6px; }
+
+.quiz button {
+  text-align: left;
+  font: inherit;
+  font-size: 14.5px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.quiz button:hover { border-color: var(--accent); }
+.quiz button.correct { border-color: var(--accent); background: var(--accent-soft); }
+.quiz button.wrong { border-color: var(--warn); background: var(--warn-soft); }
+.quiz button:disabled { cursor: default; }
+
+.quiz .fb {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+  min-height: 1.4em;
+}
+
+hr { border: none; border-top: 1px solid var(--line); margin: 48px 0 24px; }
+
+footer { color: var(--muted); font-size: 14px; }
+
+ul.tight li { margin-bottom: 6px; }
+
+</style>
+</head>
+<body>
+
+<h1>看见循环：先跑起来，再读代码</h1>
+<p class="meta">Lesson 3 · 第 1 周 · Part A 约 20 分钟（今天只做这个）· Part B 另一晚 · 绑定 <a href="0000-start-here.html">Mission</a></p>
+
+<div class="win">
+<h3>这课结束时，你会拿到</h3>
+<ul>
+<li>一个数字：你的 agent 这次 run 一共转了几圈</li>
+<li>一张对号入座表：终端输出的每一段 ↔ 循环里的哪一步</li>
+<li>（Part B 才读源码，今天不碰 agents.py）</li>
+</ul>
+</div>
+
+<h2>Part A · 今天只做这三步</h2>
+
+<div class="step">
+<h3>Step 1 · 加一行代码，数圈数</h3>
+
+<p>打开 <code>lab/Score_Store.py</code>，在最后加一行（加在两个 agent.run 的后面）：</p>
+
+<pre><code>print("这轮转了", len(agent.memory.steps), "圈")</code></pre>
+
+<p class="cmd-note">agent.memory.steps 是这次运行的全程记录，每转一圈（每想一次）记一条。len() 数它有几条。</p>
+
+<p>然后跑：</p>
+
+<span class="cmd">uv run python Score_Store.py</span>
+
+<p class="cmd-note">预期：打印出 2 或 3 之类的数字（存分那次），和另一个数字（查分那次）。</p>
+</div>
+
+<div class="step">
+<h3>Step 2 · 对号入座</h3>
+
+<p>把你终端里「查分那次 run」的输出截出来，跟下面的表对照——每一行终端输出，都是循环里的一个动作：</p>
+
+<table style="width:100%; border-collapse:collapse; font-size:14.5px">
+<tr>
+  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">终端里你看到的</th>
+  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">循环里发生的事</th>
+</tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)"><code>Step 1</code></td><td style="padding:8px; border-bottom:1px solid var(--line)">进入第 1 圈</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)"><code>Executing parsed code:</code></td><td style="padding:8px; border-bottom:1px solid var(--line)">模型想完了，把它写的代码抠出来执行（你的 forward() 在这被调用）</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)"><code>Execution logs: 张三 的分数: 100</code></td><td style="padding:8px; border-bottom:1px solid var(--line)">执行结果写回 memory（下一圈的燃料）</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)"><code>Step 2</code></td><td style="padding:8px; border-bottom:1px solid var(--line)">进入第 2 圈（模型还没交卷，while 继续转）</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)"><code>Final answer: 张三的分数是100。</code></td><td style="padding:8px; border-bottom:1px solid var(--line)">模型调了 final_answer() = 交卷，while 条件不满足，结束</td></tr>
+</table>
+
+<p>看到规律了吗：<b>「没交卷且没超 20 步 → 喂历史 → 模型想 → 抠代码 → 执行 → 记结果 → 回到开头」</b>。转几圈，终端就打几个 Step。</p>
+</div>
+
+<div class="step">
+<h3>Step 3 · 亲手炸一次保险丝</h3>
+
+<p>打开 <code>lab/gym.py</code>，找到 <code>agent = CodeAgent(...)</code> 这行，在括号里加一个参数：</p>
+
+<pre><code>agent = CodeAgent(tools=[gym_count], model=model, add_base_tools=False, max_steps=1)</code></pre>
+
+<p class="cmd-note">max_steps=1：只许转 1 圈。然后跑它。模型答「深圳和广州加起来多少家」至少要两圈，你猜会发生什么？</p>
+
+<p>跑完看报错里有没有 <code>AgentMaxStepsError</code>——那就是循环保险丝炸了。看明白后把这个参数删掉。</p>
+</div>
+
+<div class="callout">
+<b>今天就到这。</b>三个动作：数圈数、对号入座、炸保险丝。都不用读源码。<br>
+<strong>走神了就停。</strong>昨晚睡了几个小时就干这三件事，剩下的明天再说，别硬撑。
+</div>
+
+<h2>Part B · 读源码（另一晚再做，今天跳过）</h2>
+
+<p>等你 Part A 做完、终端输出能对上号了，我们再开 agents.py——到时候你不是「读陌生代码」，而是<b>拿着你亲手跑出来的现象去源码里找对应</b>，难度完全不同。预告要找的三处：</p>
+
+<ul class="tight">
+<li>L545 的 <code>while not returned_final_answer and self.step_number &lt;= max_steps:</code> —— 你炸的那根保险丝就写在这</li>
+<li>L1284 附近 <code>write_memory_to_messages()</code> —— 「模型没记性，全靠重放」的出处</li>
+<li>L496 <code>self._run_stream(...)</code> —— run() 和 _run_stream() 是前台和后厨的关系</li>
+</ul>
+
+<h2>自检（两道就两道）</h2>
+
+<div class="quiz" data-ok="对。final_answer 交卷或 max_steps 到顶，二选一。" data-no="想想 Step 2 是怎么结束的。">
+  <div class="q">1. 循环什么时候停？</div>
+  <div class="opts">
+    <button data-correct="0">模型每轮必停，一问一答</button>
+    <button data-correct="1">模型调 final_answer() 交卷，或转满 max_steps 圈</button>
+    <button data-correct="0">拿到工具返回值就停</button>
+    <button data-correct="0">你按 Ctrl+C 才停</button>
+  </div>
+  <div class="fb"></div>
+</div>
+
+<div class="quiz" data-ok="对。模型没有记忆，看到的一切都是每圈重新喂的——这也是循环越深越贵的原因。" data-no="想想为什么第二次 run 的 input tokens 也有 2000 多。">
+  <div class="q">2. 模型每转一圈「看到」的上文是哪来的？</div>
+  <div class="opts">
+    <button data-correct="0">模型服务端存着的会话历史</button>
+    <button data-correct="0">只发最新一步的观察结果</button>
+    <button data-correct="1">框架每圈把全部历史重新拼一遍发过去</button>
+    <button data-correct="0">系统提示里预写好的</button>
+  </div>
+  <div class="fb"></div>
+</div>
+
+<h2>卡住就问</h2>
+
+<p>报错整段贴给你的 agent 老师。<a href="0002-tools-and-mcp.html">上一课</a> · <a href="0000-start-here.html">Mission</a></p>
+
+</body>
+</html>

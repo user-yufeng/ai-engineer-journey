@@ -21,7 +21,6 @@ def gym_count(name: str) -> str:
     return f"{name}的手机号是{data.get(name, '没有数据')} "
 
 
-agent = CodeAgent(tools=[gym_count], model=model, add_base_tools=False)
+agent = CodeAgent(tools=[gym_count], model=model, add_base_tools=False , max_steps=20)
 
 agent.run("老曹的手机号是多少？")
-print(agent.memory.steps[-1])

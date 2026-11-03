@@ -4,7 +4,185 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>总览 · 从零到 AI 工程师</title>
-<link rel="stylesheet" href="../assets/lesson.css">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #16181d;
+  --fg: #e6e8eb;
+  --muted: #9aa4b0;
+  --line: #2c313a;
+  --surface: #1d2027;
+  --accent: #5dcaa5;
+  --accent-soft: #14312a;
+  --warn: #ef9f27;
+  --warn-soft: #33280f;
+  --code-bg: #111318;
+  --radius: 10px;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+  max-width: 760px;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 19px;
+  font-weight: 600;
+  margin: 44px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 28px 0 8px;
+}
+
+p, li { margin: 0 0 12px; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover { border-bottom-color: var(--accent); }
+
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+pre code { background: none; padding: 0; font-size: 13.5px; }
+
+.meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.callout {
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.callout.warn { border-left-color: var(--warn); }
+.callout strong { font-weight: 600; }
+
+.win {
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0 32px;
+}
+
+.win h3 { margin: 0 0 8px; font-size: 15px; }
+.win ul { margin: 0; padding-left: 20px; }
+.win li { margin: 0 0 4px; }
+
+.step {
+  border-left: 2px solid var(--line);
+  padding-left: 20px;
+  margin: 28px 0;
+}
+
+.step > h3 { margin-top: 0; }
+
+.cmd {
+  font-family: Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0 4px;
+  display: block;
+  overflow-x: auto;
+}
+
+.cmd-note {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}
+
+.quiz { margin: 16px 0 26px; }
+
+.quiz .q {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.quiz .opts { display: grid; gap: 6px; }
+
+.quiz button {
+  text-align: left;
+  font: inherit;
+  font-size: 14.5px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.quiz button:hover { border-color: var(--accent); }
+.quiz button.correct { border-color: var(--accent); background: var(--accent-soft); }
+.quiz button.wrong { border-color: var(--warn); background: var(--warn-soft); }
+.quiz button:disabled { cursor: default; }
+
+.quiz .fb {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+  min-height: 1.4em;
+}
+
+hr { border: none; border-top: 1px solid var(--line); margin: 48px 0 24px; }
+
+footer { color: var(--muted); font-size: 14px; }
+
+ul.tight li { margin-bottom: 6px; }
+
+</style>
 </head>
 <body>
 
@@ -24,9 +202,9 @@
   <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">课程</th>
   <th style="text-align:left; padding:8px; border-bottom:1px solid var(--line)">你拿到什么</th>
 </tr>
-<tr><td style="padding:8px; border-bottom:1px solid var(--line)">可开始</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0001-run-your-first-agent.html">第 1 课 · 跑通第一个 agent</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">本机能跑的 agent + 自定义工具</td></tr>
-<tr><td style="padding:8px; border-bottom:1px solid var(--line)">可开始</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0002-tools-and-mcp.html">第 2 课 · 工具系统与 MCP</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">Tool 类写法 + 真实接上 MCP 服务器</td></tr>
-<tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 3 课 · 逐行读 agent 循环</td><td style="padding:8px; border-bottom:1px solid var(--line)">看懂 agents.py 每一步</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">✓ 完成</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0001-run-your-first-agent.html">第 1 课 · 跑通第一个 agent</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">本机能跑的 agent + 自定义工具</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">✓ 完成</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0002-tools-and-mcp.html">第 2 课 · 工具系统与 MCP</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">Tool 类写法 + 真实接上 MCP 服务器</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid var(--line)">可开始</td><td style="padding:8px; border-bottom:1px solid var(--line)"><a href="0003-read-the-main-loop.html">第 3 课 · 逐行读 agent 循环</a></td><td style="padding:8px; border-bottom:1px solid var(--line)">看懂 agents.py 每一步</td></tr>
 <tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 4 课 · 从零手写 agent</td><td style="padding:8px; border-bottom:1px solid var(--line)">不依赖框架的 agent 循环</td></tr>
 <tr><td style="padding:8px; border-bottom:1px solid var(--line)">未开</td><td style="padding:8px; border-bottom:1px solid var(--line)">第 5 课 · 评测（最关键）</td><td style="padding:8px; border-bottom:1px solid var(--line)">评测集 + 准确率数字</td></tr>
 </table>
