@@ -1,8 +1,12 @@
 .venv/
 __pycache__/
 *.pyc
+*.py[oc]
 .env
 .pytest_cache/
 .workbuddy/
 reference-repos/
 _inbox/
+node_modules/
+build/
+dist/

@@ -1,3 +1,7 @@
+"""Lesson 2 · MCP 示例：接一个现成的 MCP 服务器，白捡两个时间工具。
+
+跑法：uv run python mcp_time.py
+"""
 import os
 from dotenv import load_dotenv
 from mcp import StdioServerParameters

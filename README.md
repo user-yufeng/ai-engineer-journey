@@ -12,13 +12,13 @@
 
 ## 目录
 
-| 目录 | 内容 |
-|---|---|
-| `lessons/` | 每一课的讲义（HTML，直接在浏览器打开） |
-| `learning-records/` | 学到的关键洞察，类似开发里的架构决策记录 |
-| `lab/` | 实战代码：Python 工程，`uv` 管理依赖 |
-| `reference/` | 从课程里压缩出来的速查表 |
-| `tools/` | 工具脚本（本机直连 GitHub 不通，用 API 提交） |
+| 目录                  | 内容                              |
+| ------------------- | ------------------------------- |
+| `lessons/`          | 每一课的讲义（HTML，直接在浏览器打开）           |
+| `learning-records/` | 学到的关键洞察，类似开发里的架构决策记录            |
+| `lab/`              | 实战代码：5 个可运行示例，看 `lab/README.md` |
+| `reference-repos/`  | smolagents 完整源码（本地副本，离线可读）      |
+| `tools/`            | 工具脚本（本机直连 GitHub 不通，用 API 提交）   |
 
 `MISSION.md` 是总目标，`RESOURCES.md` 是资料清单，`NOTES.md` 是学习偏好。
 

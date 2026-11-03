@@ -1,3 +1,7 @@
+"""Lesson 2 · @tool 示例：把一个普通函数变成 agent 能调用的工具。
+
+跑法：uv run python gym.py
+"""
 import os
 from dotenv import load_dotenv
 from smolagents import CodeAgent, OpenAIServerModel, tool
